@@ -21,14 +21,14 @@
                 "key": "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
                 "region": "us-east-1"
             },
-            "updatedDate": {
+            "updateDate": {
                 "$date": {
                     "$numberLong": "1552949630483"
                 }
             },
             "keyMaterial": {
                 "$binary": {
-                    "base64": "AQICAHhQNmWG2CzOm1dq3kWLM+iDUZhEqnhJwH9wZVpuZ94A8gEseZD3pQK21IQydtAgPuMjAAAAojCBnwYJKoZIhvcNAQcGoIGRMIGOAgEAMIGIBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDCRqOG6J3KQJ6fZH/AIBEIBbRtAOLl2PRknCve94T9OfEV+sLeE3Jn+Ewtsq1eGuj9Vldxxfq1lFSou7YwZVJyQpx5nZTsUVx3LgCk7B/WY/j4f6FWHteJ63zw6CNMPC5Gi1fubsu1tqwjwRLg==",
+                    "base64": "AQICAHhQNmWG2CzOm1dq3kWLM+iDUZhEqnhJwH9wZVpuZ94A8gF9FSYZL9Ze8TvTA3WBd3nmAAAAwjCBvwYJKoZIhvcNAQcGoIGxMIGuAgEAMIGoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDLV3GHktEO8AlpsYBwIBEIB7ho0DQF7hEQPRz/8b61AHm2czX53Y9BNu5z+oyGYsoP643M58aTGsaHQzkTaAmGKlZTAEOjJkRJ4gZoabVuv4g6aJqf4k4w8pK7iIgHwMNy4nbUAqOWmqtnKpHZgy6jcFN2DzZzHIi4SNFsCkFc6Aw30ixtvqIDQPAXMW",
                     "subType": "00"
                 }
             },
@@ -47,11 +47,11 @@
         {
             "description": "Schema with an encrypted field in an array",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "schema_map": {
+                "autoEncryptOpts": {
+                    "schemaMap": {
                         "default.default": {
                             "properties": {
-                                "ssn": {
+                                "encrypted_string": {
                                     "encrypt": {
                                         "keyId": [
                                             {
@@ -69,7 +69,7 @@
                             "bsonType": "array"
                         }
                     },
-                    "kms_providers": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -80,7 +80,7 @@
                     "arguments": {
                         "document": {
                             "_id": 1,
-                            "ssn": "457-55-5462"
+                            "encrypted_string": "string0"
                         }
                     },
                     "result": {
@@ -97,8 +97,8 @@
         {
             "description": "Schema without specifying parent object types",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "schema_map": {
+                "autoEncryptOpts": {
+                    "schemaMap": {
                         "default.default": {
                             "properties": {
                                 "foo": {
@@ -122,7 +122,7 @@
                             }
                         }
                     },
-                    "kms_providers": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -133,7 +133,7 @@
                     "arguments": {
                         "document": {
                             "_id": 1,
-                            "ssn": "457-55-5462"
+                            "encrypted_string": "string0"
                         }
                     },
                     "result": {
@@ -150,11 +150,11 @@
         {
             "description": "Schema with siblings of encrypt document",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "schema_map": {
+                "autoEncryptOpts": {
+                    "schemaMap": {
                         "default.default": {
                             "properties": {
-                                "ssn": {
+                                "encrypted_string": {
                                     "encrypt": {
                                         "keyId": [
                                             {
@@ -172,7 +172,7 @@
                             }
                         }
                     },
-                    "kms_providers": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -183,7 +183,7 @@
                     "arguments": {
                         "document": {
                             "_id": 1,
-                            "ssn": "457-55-5462"
+                            "encrypted_string": "string0"
                         }
                     },
                     "result": {
@@ -200,13 +200,13 @@
         {
             "description": "Schema with logical keywords",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "schema_map": {
+                "autoEncryptOpts": {
+                    "schemaMap": {
                         "default.default": {
                             "anyOf": [
                                 {
                                     "properties": {
-                                        "ssn": {
+                                        "encrypted_string": {
                                             "encrypt": {
                                                 "keyId": [
                                                     {
@@ -225,7 +225,7 @@
                             ]
                         }
                     },
-                    "kms_providers": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -236,7 +236,7 @@
                     "arguments": {
                         "document": {
                             "_id": 1,
-                            "ssn": "457-55-5462"
+                            "encrypted_string": "string0"
                         }
                     },
                     "result": {

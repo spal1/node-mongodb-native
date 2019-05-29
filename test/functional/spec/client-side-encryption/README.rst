@@ -28,7 +28,23 @@ The spec tests format is an extension of `transactions spec tests <https://githu
 
 - Addition of `$db` to command in `command_started_event`
 
-- Addition of `$type` to command_started_event and outcome.
+- Addition of `$$type` to command_started_event and outcome.
+
+The semantics of `$$type` is that any actual value matching the BSON type indicated by the BSON type string is considered a match.
+
+For example, the following matches a command_started_event for an insert of a document where `random` must be of type ``binData``:
+```
+- command_started_event:
+    command:
+      insert: *collection_name
+      documents:
+        - { random: { $$type: "binData" } }
+      ordered: true
+    command_name: insert
+```
+
+The values of `$$type` correspond to `these documented string representations of BSON types <https://docs.mongodb.com/manual/reference/bson-types/>`_.
+
 
 Each YAML file has the following keys:
 
@@ -42,7 +58,7 @@ Each YAML file has the following keys:
 
 - ``data`` |txn|
 
-- ``json_schema`` A JSONSchema that should be set on the collection (using ``createCollection``) before each test run. 
+- ``json_schema`` A JSON Schema that should be set on the collection (using ``createCollection``) before each test run.
 
 - ``key_vault_data`` The data that should exist in the key vault collection under test before each test run.
 
@@ -101,21 +117,21 @@ Load each YAML (or JSON) file using a Canonical Extended JSON parser.
 
 Then for each element in ``tests``:
 
-#. If the``skipReason`` field is present, skip this test completely.
+#. If the ``skipReason`` field is present, skip this test completely.
 #. If the ``key_vault_data`` field is present:
+
    #. Drop the ``admin.datakeys`` collection using writeConcern "majority".
    #. Insert the data specified into the ``admin.datakeys`` with write concern "majority".
+
 #. Create a MongoClient using ``clientOptions``.
+
    #. If ``client_side_encryption_opts`` includes ``aws`` as a KMS provider, pass in AWS credentials from the environment.
+   
 #. Create a collection object from the MongoClient, using the ``database_name``
    and ``collection_name`` fields from the YAML file.
 #. Drop the test collection, using writeConcern "majority".
 #. If the YAML file contains a ``data`` array, insert the documents in ``data``
    into the test collection, using writeConcern "majority".
-#. If ``failPoint`` is specified, its value is a configureFailPoint command.
-   Run the command on the admin database to enable the fail point.
-
-   - When testing against a sharded cluster run this command on ALL mongoses.
 
 #. Set Command Monitoring listeners on the MongoClient.
 #. For each element in ``operations``:
@@ -158,15 +174,6 @@ Then for each element in ``tests``:
 #. If the test includes a list of command-started events in ``expectations``,
    compare them to the actual command-started events using the
    same logic as the Command Monitoring Spec Tests runner.
-#. If ``failPoint`` is specified, disable the fail point to avoid spurious
-   failures in subsequent tests. The fail point may be disabled like so::
-
-    db.adminCommand({
-        configureFailPoint: <fail point name>,
-        mode: "off"
-    });
-
-   - When testing against a sharded cluster run this command on ALL mongoses.
 
 #. For each element in ``outcome``:
 
@@ -176,6 +183,7 @@ Then for each element in ``tests``:
      **primary read preference** with **local read concern** even when the
      MongoClient is configured with another read preference or read concern.
 
+The spec test MUST be run with *and* without auth.
 
 Prose Tests
 ===========
@@ -184,68 +192,98 @@ Tests for the KeyVault type are not included as part of the YAML tests. Tests ar
 as follows.
 
 #. Test creating a data key with the "local" KMS provider.
-  - Create a `KeyVault` with a "local" KMS provider.
-  - Create a data key with the "local" KMS provider using `KeyVault.createDataKey()`.
-  - Expect a BSON binary with subtype 4 to be returned.
-  - Expect a `findOne` on the key vault collection with `_id` set to the returned binary to return a document.
-  - Expect that document to have "masterKey.provider" set to "local"
+
+   - Create a `KeyVault` with a "local" KMS provider.
+   - Create a data key with the "local" KMS provider using `KeyVault.createDataKey()`.
+   - Expect a BSON binary with subtype 4 to be returned.
+   - Expect a `findOne` on the key vault collection with `_id` set to the returned binary to return a document.
+   - Expect that document to have "masterKey.provider" set to "local"
 
 #. Test creating a data key with the "aws" KMS provider.
-  - Create a `KeyVault` with a "aws" KMS provider.
-  - Create a data key with the "aws" KMS provider using `KeyVault.createDataKey()`.
-  - Expect a BSON binary with subtype 4 to be returned.
-  - Expect a `findOne` on the key vault collection with `_id` set to the returned binary to return a document.
-  - Expect that document to have "masterKey.provider" set to "aws"
+
+   - Create a `KeyVault` with a "aws" KMS provider.
+   - Create a data key with the "aws" KMS provider using `KeyVault.createDataKey()`.
+   - Expect a BSON binary with subtype 4 to be returned.
+   - Expect a `findOne` on the key vault collection with `_id` set to the returned binary to return a document.
+   - Expect that document to have "masterKey.provider" set to "aws"
 
 #. Test explicit encrypt and decrypt with the "local" KMS provider.
-  - Create a `KeyVault` with a "local" KMS provider.
-  - Insert the a key document in to the key vault.
-  - Use `KeyVault.encrypt` to encrypt the value "hello" with the following:
-    - the algorithm "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
-    - a fixed 16 byte initialization vector
-    - the "local" KMS provider
-  - Expect the value is equal to a known BSON binary of subtype 6
-  - Use `KeyVault.decrypt` to decrypt the encrypted value
-  - Expect the value is equal to the string "hello"
+
+   - Create a `KeyVault` with a "local" KMS provider.
+   - Insert the a key document in to the key vault.
+   - Use `KeyVault.encrypt` to encrypt the value "hello" with the following:
+
+     - the algorithm "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
+     - the "local" KMS provider
+
+   - Expect the value is equal to a known BSON binary of subtype 6
+   - Use `KeyVault.decrypt` to decrypt the encrypted value
+   - Expect the value is equal to the string "hello"
 
 #. Test explicit encrypt and decrypt with the "aws" KMS provider.
-  - Create a `KeyVault` with a "aws" KMS provider.
-  - Insert the a key document in to the key vault.
-  - Use `KeyVault.encrypt` to encrypt the value "hello" with the following:
-    - the algorithm "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
-    - a fixed 16 byte initialization vector
-    - the "aws" KMS provider
-  - Expect the value is equal to a known BSON binary of subtype 6
-  - Use `KeyVault.decrypt` to decrypt the encrypted value
-  - Expect the value is equal to the string "hello"
+
+   - Create a `KeyVault` with a "aws" KMS provider.
+   - Insert the a key document in to the key vault.
+   - Use `KeyVault.encrypt` to encrypt the value "hello" with the following:
+
+     - the algorithm "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
+     - the "aws" KMS provider
+
+   - Expect the value is equal to a known BSON binary of subtype 6
+   - Use `KeyVault.decrypt` to decrypt the encrypted value
+   - Expect the value is equal to the string "hello"
 
 #. Test explicit encrypt of invalid values.
-  - Create a `KeyVault` with either a "local" or "aws" KMS provider
-  - Use `KeyVault.encrypt` to attempt to encrypt each BSON type with deterministic encryption.
-    - Expect `document` and `array` to fail. An exception MUST be thrown.
-    - Expect a BSON binary subtype 6 to fail. An exception MUST be thrown.
-    - Expect all other values to succeed.
-  - Use `KeyVault.encrypt` to attempt to encrypt a document using randomized encryption.
-    - Expect a BSON binary subtype 6 to fail. An exception MUST be thrown.
-    - Expect all other values to succeed.
+
+   - Create a `KeyVault` with either a "local" or "aws" KMS provider
+   - Use `KeyVault.encrypt` to attempt to encrypt each BSON type with deterministic encryption.
+
+     - Expect a `string` to succeed. An exception MUST be thrown.
+     - Expect a `document` to fail. An exception MUST be thrown.
+     - Expect a `null` to fail. An exception MUST be thrown.
+     - Expect a BSON binary subtype 6 to fail. An exception MUST be thrown.
+
+   - Use `KeyVault.encrypt` to attempt to encrypt a document using randomized encryption.
+
+     - Expect a `document` to succeed.
+     - Expect a BSON binary subtype 6 to fail. An exception MUST be thrown.
+     - Expect a `null` to fail. An exception MUST be thrown.
 
 #. Test explicit encryption with auto decryption.
-  - Create a `KeyVault` with either a "local" or "aws" KMS provider
-  - Use `KeyVault.encrypt` to encrypt a value.
-  - Create a document, setting some field to the value.
-  - Insert the document into a collection.
-  - Find the document. Verify both the value matches the originally set value.
+
+   - Create a `KeyVault` with either a "local" or "aws" KMS provider
+   - Use `KeyVault.encrypt` to encrypt a value.
+   - Create a document, setting some field to the value.
+   - Insert the document into a collection.
+   - Find the document. Verify both the value matches the originally set value.
 
 #. Test explicit encrypting an auto encrypted field.
-  - Create a `KeyVault` with either a "local" or "aws" KMS provider
-  - Create a collection with a JSONSchema specifying an encrypted field.
-  - Use `KeyVault.encrypt` to encrypt a value.
-  - Create a document, setting the auto-encrypted field to the value.
-  - Insert the document. Verify an exception is thrown.
 
-#. Test explicit encrypting an auto encrypted field.
-  - Create a `KeyVault` with either a "local" or "aws" KMS provider
-  - Create a collection with a JSONSchema specifying an encrypted field.
-  - Use `KeyVault.encrypt` to encrypt a value.
-  - Create a document, setting the auto-encrypted field to the value.
-  - Insert the document. Verify an exception is thrown.
+   - Create a `KeyVault` with either a "local" or "aws" KMS provider
+   - Create a collection with a JSON Schema specifying an encrypted field.
+   - Use `KeyVault.encrypt` to encrypt a value.
+   - Create a document, setting the auto-encrypted field to the value.
+   - Insert the document. Verify an exception is thrown.
+
+#. Test bypassing automatic spawning of mongocryptd.
+
+   Note, values in angle brackets are meant to be substituted.
+
+   - Create a collection with a JSON Schema specifying an encrypted field.
+   - Spawn a mongocryptd process with: `mongocryptd --port 27030`
+   - Create a `MongoClient` configured with `clientSideEncryptionOpts` of the following:
+      - `kmsProviders = { "aws": { "access_key_id": <AWS access key id> "secret_access_key": <AWS secret access key>`
+      - `extraOptions = { "mongocryptdBypassSpawn": true, "mongocryptdURI": "mongodb://localhost:27030" }`
+   - Insert a document into the collection with a value on the encrypted field. Expect this to succeed.
+   - Find the document. Verify the value on the encrypted field matches the originally set value.
+
+#. Test spawning mongocryptd from a different path.
+
+   This test requires a copy of `mongocryptd` to exist in a directory that is not on `PATH`. E.g. `/tmp/mongocryptd`. Note, values in angle brackets are meant to be substituted.
+
+   - Create a collection with a JSON Schema specifying an encrypted field.
+   - Create a `MongoClient` configured with `clientSideEncryptionOpts` of the following:
+      - `kmsProviders = { "aws": { "access_key_id": <AWS access key id> "secret_access_key": <AWS secret access key>`
+      - `extraOptions = { "mongocryptdSpawnPath": "</path/to/mongocryptd>", "mongocryptdURI": "mongodb://localhost:27030" }`
+   - Insert a document into the collection with a value on the encrypted field. Expect this to succeed.
+   - Find the document. Verify the value on the encrypted field matches the originally set value.

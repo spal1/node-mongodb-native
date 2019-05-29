@@ -9,18 +9,18 @@
     "data": [
         {
             "_id": 1,
-            "ssn": {
+            "encrypted_string": {
                 "$binary": {
-                    "base64": "AQAAAAAAAAAAAAAAAAAAAAACaWlpaWlpaWlpaWlpaWlpaZngC99HenjphHzhJ2/Be2QvqMgm8ZR+ZaLsoUyV1rwcdrAv7jdevtzpndaZDmFcr4vefVrXCssGizpxUtq8p24=",
+                    "base64": "AQAAAAAAAAAAAAAAAAAAAAACtsdOjHK3CkpNjAAMznkYbeR6Z+yLzCRv4zOb7VfKnJdmU0W5MD8GVODx8K+KuBoCbE1SfGfPgX6NhS/RKpQ12w==",
                     "subType": "06"
                 }
             }
         },
         {
             "_id": 2,
-            "ssn": {
+            "encrypted_string": {
                 "$binary": {
-                    "base64": "AQAAAAAAAAAAAAAAAAAAAAACaWlpaWlpaWlpaWlpaWlpaQz9fzDR15Wmpcyl9/g8vO1uzwbfeEM53LrLyItCVu+7WcmW8rx8VRF1zlDykXsCL+zm9jRE2+zuhv1ZQwzQlkI=",
+                    "base64": "AQAAAAAAAAAAAAAAAAAAAAAC1ijPpI+oG1mNiFChFAz7heo3R150yDhxZ7nOnPUwDM+aEvPRBuU6rXtgkVt7mgLd2H9rq9iChCAV46YKcpNrFw==",
                     "subType": "06"
                 }
             }
@@ -32,16 +32,10 @@
                 "encrypt": {
                     "keyId": "/altname",
                     "bsonType": "string",
-                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
-                    "initializationVector": {
-                        "$binary": {
-                            "base64": "aWlpaWlpaWlpaWlpaWlpaQ==",
-                            "subType": "00"
-                        }
-                    }
+                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
                 }
             },
-            "ssn": {
+            "encrypted_string": {
                 "encrypt": {
                     "keyId": [
                         {
@@ -52,13 +46,7 @@
                         }
                     ],
                     "bsonType": "string",
-                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
-                    "initializationVector": {
-                        "$binary": {
-                            "base64": "aWlpaWlpaWlpaWlpaWlpaQ==",
-                            "subType": "00"
-                        }
-                    }
+                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
                 }
             },
             "random": {
@@ -75,7 +63,7 @@
                     "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Random"
                 }
             },
-            "ssn_equivalent": {
+            "encrypted_string_equivalent": {
                 "encrypt": {
                     "keyId": [
                         {
@@ -86,13 +74,7 @@
                         }
                     ],
                     "bsonType": "string",
-                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
-                    "initializationVector": {
-                        "$binary": {
-                            "base64": "aWlpaWlpaWlpaWlpaWlpaQ==",
-                            "subType": "00"
-                        }
-                    }
+                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
                 }
             }
         },
@@ -112,14 +94,14 @@
                 "key": "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
                 "region": "us-east-1"
             },
-            "updatedDate": {
+            "updateDate": {
                 "$date": {
                     "$numberLong": "1552949630483"
                 }
             },
             "keyMaterial": {
                 "$binary": {
-                    "base64": "AQICAHhQNmWG2CzOm1dq3kWLM+iDUZhEqnhJwH9wZVpuZ94A8gEseZD3pQK21IQydtAgPuMjAAAAojCBnwYJKoZIhvcNAQcGoIGRMIGOAgEAMIGIBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDCRqOG6J3KQJ6fZH/AIBEIBbRtAOLl2PRknCve94T9OfEV+sLeE3Jn+Ewtsq1eGuj9Vldxxfq1lFSou7YwZVJyQpx5nZTsUVx3LgCk7B/WY/j4f6FWHteJ63zw6CNMPC5Gi1fubsu1tqwjwRLg==",
+                    "base64": "AQICAHhQNmWG2CzOm1dq3kWLM+iDUZhEqnhJwH9wZVpuZ94A8gF9FSYZL9Ze8TvTA3WBd3nmAAAAwjCBvwYJKoZIhvcNAQcGoIGxMIGuAgEAMIGoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDLV3GHktEO8AlpsYBwIBEIB7ho0DQF7hEQPRz/8b61AHm2czX53Y9BNu5z+oyGYsoP643M58aTGsaHQzkTaAmGKlZTAEOjJkRJ4gZoabVuv4g6aJqf4k4w8pK7iIgHwMNy4nbUAqOWmqtnKpHZgy6jcFN2DzZzHIi4SNFsCkFc6Aw30ixtvqIDQPAXMW",
                     "subType": "00"
                 }
             },
@@ -138,8 +120,8 @@
         {
             "description": "$expr unconditionally fails",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -166,8 +148,8 @@
         {
             "description": "$text unconditionally fails",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -191,8 +173,8 @@
         {
             "description": "$where unconditionally fails",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -214,36 +196,10 @@
             ]
         },
         {
-            "description": "$jsonSchema unconditionally fails",
-            "skipReason": "SERVER-41012",
-            "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
-                        "aws": {}
-                    }
-                }
-            },
-            "operations": [
-                {
-                    "name": "find",
-                    "arguments": {
-                        "filter": {
-                            "$jsonSchema": {
-                                "properties": {}
-                            }
-                        }
-                    },
-                    "result": {
-                        "errorContains": "Unsupported match expression operator for encryption"
-                    }
-                }
-            ]
-        },
-        {
             "description": "$bit operators succeed on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -264,7 +220,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$bitsAllClear": 35
                             }
                         }
@@ -288,7 +244,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$bitsAllSet": 35
                             }
                         }
@@ -312,7 +268,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$bitsAnyClear": 35
                             }
                         }
@@ -336,7 +292,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$bitsAnySet": 35
                             }
                         }
@@ -350,8 +306,8 @@
         {
             "description": "geo operators succeed on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -377,7 +333,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$near": [
                                     0,
                                     0
@@ -409,7 +365,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$nearSphere": [
                                     0,
                                     0
@@ -460,7 +416,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$geoIntersects": {
                                     "$geometry": {
                                         "type": "Polygon",
@@ -532,7 +488,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$geoWithin": {
                                     "$geometry": {
                                         "type": "Polygon",
@@ -570,8 +526,8 @@
         {
             "description": "inequality operators succeed on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -592,7 +548,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$gt": 1
                             }
                         }
@@ -616,7 +572,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$lt": 1
                             }
                         }
@@ -640,7 +596,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$gte": 1
                             }
                         }
@@ -664,7 +620,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$lte": 1
                             }
                         }
@@ -678,8 +634,8 @@
         {
             "description": "other misc operators succeed on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -703,7 +659,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$mod": [
                                     3,
                                     1
@@ -731,7 +687,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$regex": "pattern",
                                 "$options": ""
                             }
@@ -756,7 +712,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$size": 2
                             }
                         }
@@ -780,7 +736,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$type": 2
                             }
                         }
@@ -801,11 +757,11 @@
                     "result": [
                         {
                             "_id": 1,
-                            "ssn": "457-55-5462"
+                            "encrypted_string": "string0"
                         },
                         {
                             "_id": 2,
-                            "ssn": "123-45-6789"
+                            "encrypted_string": "string1"
                         }
                     ]
                 },
@@ -813,7 +769,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$eq": null
                             }
                         }
@@ -836,11 +792,11 @@
                     "result": [
                         {
                             "_id": 1,
-                            "ssn": "457-55-5462"
+                            "encrypted_string": "string0"
                         },
                         {
                             "_id": 2,
-                            "ssn": "123-45-6789"
+                            "encrypted_string": "string1"
                         }
                     ]
                 },
@@ -848,7 +804,7 @@
                     "name": "find",
                     "arguments": {
                         "filter": {
-                            "ssn": {
+                            "encrypted_string": {
                                 "$in": [
                                     null
                                 ]
@@ -864,8 +820,8 @@
         {
             "description": "$addToSet succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -895,7 +851,7 @@
                         "filter": {},
                         "update": {
                             "$addToSet": {
-                                "ssn": [
+                                "encrypted_string": [
                                     "a"
                                 ]
                             }
@@ -910,8 +866,8 @@
         {
             "description": "$inc succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -939,7 +895,7 @@
                         "filter": {},
                         "update": {
                             "$inc": {
-                                "ssn": 1
+                                "encrypted_string": 1
                             }
                         }
                     },
@@ -952,8 +908,8 @@
         {
             "description": "$mul succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -981,7 +937,7 @@
                         "filter": {},
                         "update": {
                             "$mul": {
-                                "ssn": 1
+                                "encrypted_string": 1
                             }
                         }
                     },
@@ -994,8 +950,8 @@
         {
             "description": "$max succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1023,7 +979,7 @@
                         "filter": {},
                         "update": {
                             "$max": {
-                                "ssn": 1
+                                "encrypted_string": 1
                             }
                         }
                     },
@@ -1036,8 +992,8 @@
         {
             "description": "$min succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1065,7 +1021,7 @@
                         "filter": {},
                         "update": {
                             "$min": {
-                                "ssn": 1
+                                "encrypted_string": 1
                             }
                         }
                     },
@@ -1078,8 +1034,8 @@
         {
             "description": "$currentDate succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1107,7 +1063,7 @@
                         "filter": {},
                         "update": {
                             "$currentDate": {
-                                "ssn": true
+                                "encrypted_string": true
                             }
                         }
                     },
@@ -1120,8 +1076,8 @@
         {
             "description": "$pop succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1149,7 +1105,7 @@
                         "filter": {},
                         "update": {
                             "$pop": {
-                                "ssn": 1
+                                "encrypted_string": 1
                             }
                         }
                     },
@@ -1162,8 +1118,8 @@
         {
             "description": "$pull succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1191,7 +1147,7 @@
                         "filter": {},
                         "update": {
                             "$pull": {
-                                "ssn": 1
+                                "encrypted_string": 1
                             }
                         }
                     },
@@ -1204,8 +1160,8 @@
         {
             "description": "$pullAll succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1235,7 +1191,7 @@
                         "filter": {},
                         "update": {
                             "$pullAll": {
-                                "ssn": [
+                                "encrypted_string": [
                                     1
                                 ]
                             }
@@ -1250,8 +1206,8 @@
         {
             "description": "$push succeeds on unencrypted, error on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1279,7 +1235,7 @@
                         "filter": {},
                         "update": {
                             "$push": {
-                                "ssn": 1
+                                "encrypted_string": 1
                             }
                         }
                     },
@@ -1291,10 +1247,9 @@
         },
         {
             "description": "array filters on encrypted fields does not error in mongocryptd, but errors in mongod",
-            "skipReason": "SERVER-41022",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1306,7 +1261,7 @@
                         "filter": {},
                         "update": {
                             "$set": {
-                                "ssn.$[i].x": 1
+                                "encrypted_string.$[i].x": 1
                             }
                         },
                         "arrayFilters": [
@@ -1316,7 +1271,7 @@
                         ]
                     },
                     "result": {
-                        "errorContains": "TODO"
+                        "errorContains": "Array update operations not allowed on encrypted values"
                     }
                 }
             ]
@@ -1324,8 +1279,8 @@
         {
             "description": "positional operator succeeds on unencrypted, errors on encrypted",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1353,11 +1308,11 @@
                     "name": "updateOne",
                     "arguments": {
                         "filter": {
-                            "ssn": 1
+                            "encrypted_string": "abc"
                         },
                         "update": {
                             "$set": {
-                                "ssn.$": 1
+                                "encrypted_string.$": "abc"
                             }
                         }
                     },
@@ -1370,8 +1325,8 @@
         {
             "description": "an update that would produce an array on an encrypted field errors",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1383,7 +1338,7 @@
                         "filter": {},
                         "update": {
                             "$set": {
-                                "ssn": [
+                                "encrypted_string": [
                                     1,
                                     2
                                 ]
@@ -1399,11 +1354,11 @@
         {
             "description": "an insert with encrypted field on _id errors",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     },
-                    "schema_map": {
+                    "schemaMap": {
                         "default.default": {
                             "properties": {
                                 "_id": {
@@ -1417,13 +1372,7 @@
                                             }
                                         ],
                                         "bsonType": "string",
-                                        "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
-                                        "initializationVector": {
-                                            "$binary": {
-                                                "base64": "aWlpaWlpaWlpaWlpaWlpaQ==",
-                                                "subType": "00"
-                                            }
-                                        }
+                                        "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
                                     }
                                 }
                             }
@@ -1448,8 +1397,8 @@
         {
             "description": "an insert with an array value for an encrypted field fails",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1459,7 +1408,7 @@
                     "name": "insertOne",
                     "arguments": {
                         "document": {
-                            "ssn": [
+                            "encrypted_string": [
                                 "123",
                                 "456"
                             ]
@@ -1474,8 +1423,8 @@
         {
             "description": "an insert with a Timestamp(0,0) value in the top-level fails",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1502,8 +1451,8 @@
         {
             "description": "distinct with the key referring to a field where the keyID is a JSON Pointer errors",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -1512,8 +1461,8 @@
                 {
                     "name": "distinct",
                     "arguments": {
-                        "fieldName": "encrypted_w_altname",
-                        "filter": {}
+                        "filter": {},
+                        "fieldName": "encrypted_w_altname"
                     },
                     "result": {
                         "errorContains": "The distinct key is not allowed to be marked for encryption with a non-UUID keyId"

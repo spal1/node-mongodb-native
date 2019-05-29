@@ -6,17 +6,17 @@ collection_name: &collection_name "default"
 data:
   - &doc0
     _id: 1
-    ssn:
+    encrypted_string:
       $binary:
-        base64: {{ ciphertext("123-45-6789", field="ssn")["$binary"]["base64"] }}
+        base64: {{ ciphertext("string1", field="encrypted_string")["$binary"]["base64"] }}
         subType: "00"
   - _id: 2
-    ssn:
+    encrypted_string:
       $binary:
         base64: "AQ=="
         subType: "06"
   - _id: 3
-    ssn:
+    encrypted_string:
       $binary:
         base64: "AQAAa2V2aW4gYWxiZXJ0c29uCg=="
         subType: "06"
@@ -27,8 +27,8 @@ key_vault_data: [{{key()}}]
 tests:
   - description: "Wrong subtype"
     clientOptions:
-      auto_encrypt_opts:
-        kms_providers:
+      autoEncryptOpts:
+        kmsProviders:
           aws: {} # Credentials filled in from environment.
     operations:
       - name: find
@@ -39,8 +39,8 @@ tests:
           - *doc0
   - description: "Empty data"
     clientOptions:
-      auto_encrypt_opts:
-        kms_providers:
+      autoEncryptOpts:
+        kmsProviders:
           aws: {} # Credentials filled in from environment.
     operations:
       - name: find
@@ -50,8 +50,8 @@ tests:
           errorContains: "malformed ciphertext"
   - description: "Malformed data"
     clientOptions:
-      auto_encrypt_opts:
-        kms_providers:
+      autoEncryptOpts:
+        kmsProviders:
           aws: {} # Credentials filled in from environment.
     operations:
       - name: find
@@ -60,4 +60,4 @@ tests:
         result:
           # ciphertext can only validate subtype (which is correct)
           # but takes the 16 byte UUID to look up key. Fails to find.
-          errorContains: "client did not provide all keys"
+          errorContains: "did not provide all keys"

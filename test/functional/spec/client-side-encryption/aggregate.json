@@ -9,9 +9,9 @@
     "data": [
         {
             "_id": 1,
-            "ssn": {
+            "encrypted_string": {
                 "$binary": {
-                    "base64": "AQAAAAAAAAAAAAAAAAAAAAACaWlpaWlpaWlpaWlpaWlpaZngC99HenjphHzhJ2/Be2QvqMgm8ZR+ZaLsoUyV1rwcdrAv7jdevtzpndaZDmFcr4vefVrXCssGizpxUtq8p24=",
+                    "base64": "AQAAAAAAAAAAAAAAAAAAAAACtsdOjHK3CkpNjAAMznkYbeR6Z+yLzCRv4zOb7VfKnJdmU0W5MD8GVODx8K+KuBoCbE1SfGfPgX6NhS/RKpQ12w==",
                     "subType": "06"
                 }
             }
@@ -23,16 +23,10 @@
                 "encrypt": {
                     "keyId": "/altname",
                     "bsonType": "string",
-                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
-                    "initializationVector": {
-                        "$binary": {
-                            "base64": "aWlpaWlpaWlpaWlpaWlpaQ==",
-                            "subType": "00"
-                        }
-                    }
+                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
                 }
             },
-            "ssn": {
+            "encrypted_string": {
                 "encrypt": {
                     "keyId": [
                         {
@@ -43,13 +37,7 @@
                         }
                     ],
                     "bsonType": "string",
-                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
-                    "initializationVector": {
-                        "$binary": {
-                            "base64": "aWlpaWlpaWlpaWlpaWlpaQ==",
-                            "subType": "00"
-                        }
-                    }
+                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
                 }
             },
             "random": {
@@ -66,7 +54,7 @@
                     "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Random"
                 }
             },
-            "ssn_equivalent": {
+            "encrypted_string_equivalent": {
                 "encrypt": {
                     "keyId": [
                         {
@@ -77,13 +65,7 @@
                         }
                     ],
                     "bsonType": "string",
-                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic",
-                    "initializationVector": {
-                        "$binary": {
-                            "base64": "aWlpaWlpaWlpaWlpaWlpaQ==",
-                            "subType": "00"
-                        }
-                    }
+                    "algorithm": "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
                 }
             }
         },
@@ -103,14 +85,14 @@
                 "key": "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
                 "region": "us-east-1"
             },
-            "updatedDate": {
+            "updateDate": {
                 "$date": {
                     "$numberLong": "1552949630483"
                 }
             },
             "keyMaterial": {
                 "$binary": {
-                    "base64": "AQICAHhQNmWG2CzOm1dq3kWLM+iDUZhEqnhJwH9wZVpuZ94A8gEseZD3pQK21IQydtAgPuMjAAAAojCBnwYJKoZIhvcNAQcGoIGRMIGOAgEAMIGIBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDCRqOG6J3KQJ6fZH/AIBEIBbRtAOLl2PRknCve94T9OfEV+sLeE3Jn+Ewtsq1eGuj9Vldxxfq1lFSou7YwZVJyQpx5nZTsUVx3LgCk7B/WY/j4f6FWHteJ63zw6CNMPC5Gi1fubsu1tqwjwRLg==",
+                    "base64": "AQICAHhQNmWG2CzOm1dq3kWLM+iDUZhEqnhJwH9wZVpuZ94A8gF9FSYZL9Ze8TvTA3WBd3nmAAAAwjCBvwYJKoZIhvcNAQcGoIGxMIGuAgEAMIGoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDLV3GHktEO8AlpsYBwIBEIB7ho0DQF7hEQPRz/8b61AHm2czX53Y9BNu5z+oyGYsoP643M58aTGsaHQzkTaAmGKlZTAEOjJkRJ4gZoabVuv4g6aJqf4k4w8pK7iIgHwMNy4nbUAqOWmqtnKpHZgy6jcFN2DzZzHIi4SNFsCkFc6Aw30ixtvqIDQPAXMW",
                     "subType": "00"
                 }
             },
@@ -130,8 +112,8 @@
             "description": "Aggregate with deterministic encryption",
             "skipReason": "SERVER-39395",
             "clientOptions": {
-                "auto_encrypt_opts": {
-                    "kms_providers": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
                         "aws": {}
                     }
                 }
@@ -143,7 +125,7 @@
                         "pipeline": [
                             {
                                 "$match": {
-                                    "ssn": "457-55-5642"
+                                    "encrypted_string": "457-55-5642"
                                 }
                             }
                         ]
@@ -151,7 +133,7 @@
                     "result": [
                         {
                             "_id": 1,
-                            "ssn": "457-55-5462"
+                            "encrypted_string": "string0"
                         }
                     ]
                 }
@@ -187,16 +169,25 @@
                         "command": {
                             "find": "datakeys",
                             "filter": {
-                                "_id": {
-                                    "$in": [
-                                        {
-                                            "$binary": {
-                                                "base64": "AAAAAAAAAAAAAAAAAAAAAA==",
-                                                "subType": "04"
-                                            }
+                                "$or": [
+                                    {
+                                        "_id": {
+                                            "$in": [
+                                                {
+                                                    "$binary": {
+                                                        "base64": "AAAAAAAAAAAAAAAAAAAAAA==",
+                                                        "subType": "04"
+                                                    }
+                                                }
+                                            ]
                                         }
-                                    ]
-                                }
+                                    },
+                                    {
+                                        "keyAltNames": {
+                                            "$in": []
+                                        }
+                                    }
+                                ]
                             },
                             "$db": "admin"
                         },
@@ -210,7 +201,7 @@
                             "pipeline": [
                                 {
                                     "$match": {
-                                        "ssn": "457-55-5642"
+                                        "encrypted_string": "457-55-5642"
                                     }
                                 }
                             ]
@@ -224,9 +215,116 @@
                     "data": [
                         {
                             "_id": 1,
-                            "ssn": {
+                            "encrypted_string": {
                                 "$binary": {
-                                    "base64": "AQAAAAAAAAAAAAAAAAAAAAACaWlpaWlpaWlpaWlpaWlpaZngC99HenjphHzhJ2/Be2QvqMgm8ZR+ZaLsoUyV1rwcdrAv7jdevtzpndaZDmFcr4vefVrXCssGizpxUtq8p24=",
+                                    "base64": "AQAAAAAAAAAAAAAAAAAAAAACtsdOjHK3CkpNjAAMznkYbeR6Z+yLzCRv4zOb7VfKnJdmU0W5MD8GVODx8K+KuBoCbE1SfGfPgX6NhS/RKpQ12w==",
+                                    "subType": "06"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "description": "Aggregate with empty pipeline",
+            "skipReason": "SERVER-40829 hides agg support behind enableTestCommands flag.",
+            "clientOptions": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
+                        "aws": {}
+                    }
+                }
+            },
+            "operations": [
+                {
+                    "name": "aggregate",
+                    "arguments": {
+                        "pipeline": []
+                    },
+                    "result": [
+                        {
+                            "_id": 1,
+                            "encrypted_string": "string0"
+                        }
+                    ]
+                }
+            ],
+            "expectations": [
+                {
+                    "command_started_event": {
+                        "command": {
+                            "listCollections": 1,
+                            "cursor": {},
+                            "filter": {
+                                "name": "default"
+                            }
+                        },
+                        "command_name": "listCollections"
+                    }
+                },
+                {
+                    "command_started_event": {
+                        "command": {
+                            "aggregate": "default",
+                            "pipeline": [],
+                            "cursor": {}
+                        },
+                        "command_name": "aggregate"
+                    }
+                },
+                {
+                    "command_started_event": {
+                        "command": {
+                            "listCollections": 1,
+                            "cursor": {},
+                            "filter": {
+                                "name": "datakeys"
+                            },
+                            "$db": "admin"
+                        },
+                        "command_name": "listCollections"
+                    }
+                },
+                {
+                    "command_started_event": {
+                        "command": {
+                            "find": "datakeys",
+                            "filter": {
+                                "$or": [
+                                    {
+                                        "_id": {
+                                            "$in": [
+                                                {
+                                                    "$binary": {
+                                                        "base64": "AAAAAAAAAAAAAAAAAAAAAA==",
+                                                        "subType": "04"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "keyAltNames": {
+                                            "$in": []
+                                        }
+                                    }
+                                ]
+                            },
+                            "$db": "admin"
+                        },
+                        "command_name": "find"
+                    }
+                }
+            ],
+            "outcome": {
+                "collection": {
+                    "data": [
+                        {
+                            "_id": 1,
+                            "encrypted_string": {
+                                "$binary": {
+                                    "base64": "AQAAAAAAAAAAAAAAAAAAAAACtsdOjHK3CkpNjAAMznkYbeR6Z+yLzCRv4zOb7VfKnJdmU0W5MD8GVODx8K+KuBoCbE1SfGfPgX6NhS/RKpQ12w==",
                                     "subType": "06"
                                 }
                             }
@@ -237,7 +335,78 @@
         },
         {
             "description": "Aggregate should fail with random encryption",
-            "skipReason": "SERVER-39395"
+            "skipReason": "SERVER-39395",
+            "clientOptions": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
+                        "aws": {}
+                    }
+                }
+            },
+            "operations": [
+                {
+                    "name": "aggregate",
+                    "arguments": {
+                        "pipeline": [
+                            {
+                                "$match": {
+                                    "random": "abc"
+                                }
+                            }
+                        ]
+                    },
+                    "result": {
+                        "errorContains": "Cannot query on fields encrypted with the randomized encryption"
+                    }
+                }
+            ]
+        },
+        {
+            "description": "Database aggregate should fail",
+            "clientOptions": {
+                "autoEncryptOpts": {
+                    "kmsProviders": {
+                        "aws": {}
+                    }
+                }
+            },
+            "operations": [
+                {
+                    "name": "aggregate",
+                    "object": "database",
+                    "arguments": {
+                        "pipeline": [
+                            {
+                                "$currentOp": {
+                                    "allUsers": false,
+                                    "idleConnections": false,
+                                    "localOps": true
+                                }
+                            },
+                            {
+                                "$match": {
+                                    "command.aggregate": {
+                                        "$eq": 1
+                                    }
+                                }
+                            },
+                            {
+                                "$project": {
+                                    "command": 1
+                                }
+                            },
+                            {
+                                "$project": {
+                                    "command.lsid": 0
+                                }
+                            }
+                        ]
+                    },
+                    "result": {
+                        "errorContains": "automatic encryption is not supported"
+                    }
+                }
+            ]
         }
     ]
 }
