@@ -5,11 +5,8 @@ const fs = require('fs');
 const MongoClient = require('mongodb').MongoClient;
 const parseConnectionString = require('../../lib/core/uri_parser');
 
-const testPath = path.join(path.join(process.cwd(), '../'), 'test');
-const configPath = path.join(testPath, 'config.js');
-const envPath = path.join(testPath, 'environments.js');
-const environments = require(envPath);
-const TestConfiguration = require(configPath);
+const environments = require('../environments');
+const TestConfiguration = require('../config');
 
 const mock = require('mongodb-mock-server');
 
