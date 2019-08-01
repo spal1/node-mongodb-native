@@ -19,6 +19,7 @@ class MongoDBTopologyFilter {
         callback(err);
         return;
       }
+      console.log("client.topology.s.coreTopology.ismaster.hosts ",client.topology.s.coreTopology.ismaster)
       let topologyType = mongoClient.topology.type;
       switch (topologyType) {
         case 'server':

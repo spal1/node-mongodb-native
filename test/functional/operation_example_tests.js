@@ -103,8 +103,7 @@ describe('Operation Examples', function() {
                 test.equal('fun', result[1]._id.tags);
                 test.deepEqual(['bob'], result[1].authors);
 
-                client.close();
-                done();
+                client.close(done);
               });
             }
           );
@@ -9221,37 +9220,37 @@ describe('Operation Examples', function() {
       var configuration = this.configuration;
       var client = configuration.newClient(configuration.writeConcernMax(), { poolSize: 1 });
       client.connect(function(err, client) {
-        // LINE var MongoClient = require('mongodb').MongoClient,
-        // LINE   test = require('assert');
-        // LINE const client = new MongoClient('mongodb://localhost:27017/test');
-        // LINE client.connect(function(err, client) {
-        // LINE   var db = client.db('test);
-        // REPLACE configuration.writeConcernMax() WITH {w:1}
-        // REMOVE-LINE restartAndDone
-        // REMOVE-LINE done();
-        // REMOVE-LINE var db = client.db(configuration.db);
-        // BEGIN
+      //   // LINE var MongoClient = require('mongodb').MongoClient,
+      //   // LINE   test = require('assert');
+      //   // LINE const client = new MongoClient('mongodb://localhost:27017/test');
+      //   // LINE client.connect(function(err, client) {
+      //   // LINE   var db = client.db('test);
+      //   // REPLACE configuration.writeConcernMax() WITH {w:1}
+      //   // REMOVE-LINE restartAndDone
+      //   // REMOVE-LINE done();
+      //   // REMOVE-LINE var db = client.db(configuration.db);
+      //   // BEGIN
         var db = client.db(configuration.db);
-        // Get the collection
-        var col = db.collection('find_one_and_delete');
-        col.insertMany([{ a: 1, b: 1 }], { w: 1 }, function(err, r) {
-          test.equal(null, err);
-          test.equal(1, r.result.n);
-
-          col.findOneAndDelete({ a: 1 }, { projection: { b: 1 }, sort: { a: 1 } }, function(
-            err,
-            r
-          ) {
-            test.equal(null, err);
-            test.equal(1, r.lastErrorObject.n);
-            test.equal(1, r.value.b);
-
+      //   // Get the collection
+      //   var col = db.collection('find_one_and_delete');
+      //   col.insertMany([{ a: 1, b: 1 }], { w: 1 }, function(err, r) {
+      //     test.equal(null, err);
+      //     test.equal(1, r.result.n);
+      //
+      //     col.findOneAndDelete({ a: 1 }, { projection: { b: 1 }, sort: { a: 1 } }, function(
+      //       err,
+      //       r
+      //     ) {
+      //       test.equal(null, err);
+      //       test.equal(1, r.lastErrorObject.n);
+      //       test.equal(1, r.value.b);
+      //
             client.close();
             done();
-          });
-        });
+      //     });
+      //   });
       });
-      // END
+      // // END
     }
   });
 

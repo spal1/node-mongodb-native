@@ -44,6 +44,7 @@ function environmentSetup(environmentCallback) {
     function environmentParser(environmentName, version) {
       const Environment = environments[environmentName];
       const environment = new Environment(version);
+      //console.log("Environment before: ",environment)
       environmentName !== 'single'
         ? parseConnectionString(mongodb_uri, (err, parsedURI) => {
             if (err) throw new Error(err);
@@ -52,7 +53,7 @@ function environmentSetup(environmentCallback) {
             environment.host = parsedURI.hosts[0].host;
           })
         : undefined;
-
+      //console.log("Environment after: ",environment)
       try {
         const mongoPackage = {
           path: path.resolve(process.cwd(), '..'),

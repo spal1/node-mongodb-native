@@ -1187,7 +1187,9 @@ describe('GridFS Stream', function() {
                 });
 
                 download.on('end', function() {
+
                   var result = testSpec.assert.result;
+                  console.log("gridfs line 1192: ",testSpec)
                   expect(result).to.exist;
                   test.equal(res.toString('hex'), result.$hex);
 
@@ -1195,8 +1197,7 @@ describe('GridFS Stream', function() {
                   // and by extension the implicit session used for the cursor.
                   // This is only necessary if the cursor is not exhausted
                   download.abort();
-                  client.close();
-                  done();
+                  client.close(done);
                 });
               };
 

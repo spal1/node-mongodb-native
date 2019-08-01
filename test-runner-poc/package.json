@@ -7,6 +7,7 @@
     "test": "mocha --file lib/runner.js test/crud_tests.js",
     "test-crud": "mocha --file lib/runner.js ../test/functional/crud_spec_tests.js",
     "test-view": "mocha --timeout 60000 --file lib/runner.js ../test/functional/view_tests.js",
+    "test-op": "mocha --timeout 60000 --file lib/runner.js ../test/functional/operation_example_tests.js",
     "hanging": "./functional_hanging.sh",
     "func": "mocha --timeout 60000 --file lib/runner.js '../test/functional/*.js'",
     "unit": "mocha --file lib/runner.js '../test/unit/*_tests.js'",
@@ -16,8 +17,8 @@
   "author": "Rosemary Yin and Sam Pal",
   "license": "ISC",
   "dependencies": {
-    "mocha": "*",
     "chai": "*",
-    "mongodb": "*"
+    "mocha": "*",
+    "mongodb": "*",
   }
 }
