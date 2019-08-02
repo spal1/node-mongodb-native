@@ -41,15 +41,15 @@ function environmentSetup(environmentCallback) {
     function environmentParser(environmentName, version) {
       console.log('environmentName ', environmentName);
       const Environment = environments[environmentName];
-      const environment = new Environment(version);
-      environmentName !== 'single'
-        ? parseConnectionString(mongodb_uri, (err, parsedURI) => {
-            if (err) throw new Error(err);
-            environment.url = mongodb_uri + '/integration_tests';
-            environment.port = parsedURI.hosts[0].port;
-            environment.host = parsedURI.hosts[0].host;
-          })
-        : undefined;
+
+      let host, port;
+      parseConnectionString(mongodb_uri, (err, parsedURI) => {
+        if (err) throw new Error(err);
+        port = parsedURI.hosts[0].port;
+        host = parsedURI.hosts[0].host;
+      });
+
+      const environment = new Environment(host, port, version);
 
       try {
         const mongoPackage = {
