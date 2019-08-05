@@ -17,7 +17,6 @@ class ConfigurationBase {
       return { w: 1 };
     };
   }
-
 }
 
 class NativeConfiguration extends ConfigurationBase {
