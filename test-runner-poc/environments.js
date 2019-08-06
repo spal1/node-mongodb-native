@@ -18,6 +18,11 @@ class EnvironmentBase {
   setup(callback) {
     callback();
   }
+
+  constructor(parsedURI) {
+    this.host = parsedURI.hosts[0].host;
+    this.port = parsedURI.hosts[0].port;
+  }
 }
 
 const genReplsetConfig = (port, options) => {
@@ -43,18 +48,16 @@ function usingUnifiedTopology() {
  * @param {*} discoverResult
  */
 class ReplicaSetEnvironment extends EnvironmentBase {
-  constructor(host, port, version) {
-    super();
+  constructor(parsedURI, version) {
+    super(parsedURI);
 
-    this.host = host;
-    this.port = port;
     this.setName = 'replset';
-    this.url = `mongodb://%s${host}:${port}/integration_tests?rs_name=rs`;
+    this.url = `mongodb://%s${this.host}:${this.port}/integration_tests?rs_name=rs`;
     this.writeConcernMax = { w: 'majority', wtimeout: 30000 };
     this.replicasetName = 'rs';
     this.topology = function(topologyHost, topologyPort, options) {
-      topologyHost = topologyHost || host;
-      topologyPort = topologyPort || port;
+      topologyHost = topologyHost || this.host;
+      topologyPort = topologyPort || this.port;
       options = Object.assign({}, options);
       options.replicaSet = 'rs';
       options.poolSize = 1;
@@ -68,11 +71,11 @@ class ReplicaSetEnvironment extends EnvironmentBase {
     };
 
     this.nodes = [
-      genReplsetConfig(port, { tags: { loc: 'ny' } }),
-      genReplsetConfig(port+1, { tags: { loc: 'sf' } }),
-      genReplsetConfig(port+2, { tags: { loc: 'sf' } }),
-      genReplsetConfig(port+3, { tags: { loc: 'sf' } }),
-      genReplsetConfig(port+4, { arbiter: true })
+      genReplsetConfig(this.port, { tags: { loc: 'ny' } }),
+      genReplsetConfig(this.port + 1, { tags: { loc: 'sf' } }),
+      genReplsetConfig(this.port + 2, { tags: { loc: 'sf' } }),
+      genReplsetConfig(this.port + 3, { tags: { loc: 'sf' } }),
+      genReplsetConfig(this.port + 4, { arbiter: true })
     ];
 
     // Do we have 3.2+
@@ -90,10 +93,8 @@ class ReplicaSetEnvironment extends EnvironmentBase {
  *
  */
 class SingleEnvironment extends EnvironmentBase {
-  constructor(host, port) {
-    super();
-    this.host = host;
-    this.port = port;
+  constructor(parsedURI) {
+    super(parsedURI);
   }
 }
 
@@ -130,21 +131,18 @@ const genConfigNode = (port, options) => {
  *
  */
 class ShardedEnvironment extends EnvironmentBase {
-  constructor(host, port, version) {
-    super();
-
-    this.host = host;
-    this.port = port;
+  constructor(parsedURI, version) {
+    super(parsedURI);
 
     // NOTE: only connect to a single shard because there can be consistency issues using
     //       more, revolving around the inability for shards to keep up-to-date views of
     //       changes to the world (such as dropping a database).
-    this.url = `mongodb://%s${host}:${port}/integration_tests`;
+    this.url = `mongodb://%s${this.host}:${this.port}/integration_tests`;
 
     this.writeConcernMax = { w: 'majority', wtimeout: 30000 };
     this.topology = (topologyHost, topologyPort, options) => {
-      topologyHost = topologyHost || host;
-      topologyPort = topologyPort || port;
+      topologyHost = topologyHost || this.host;
+      topologyPort = topologyPort || this.port;
       options = options || {};
 
       if (usingUnifiedTopology()) {
@@ -209,16 +207,16 @@ class ShardedEnvironment extends EnvironmentBase {
  *
  */
 class SslEnvironment extends EnvironmentBase {
-  constructor(host, port) {
-    super();
+  constructor(parsedURI) {
+    super(parsedURI);
 
     this.sslOnNormalPorts = null;
     this.fork = null;
     this.sslPEMKeyFile = __dirname + '/functional/ssl/server.pem';
-    this.url = 'mongodb://%slocalhost:27017/integration_tests?ssl=true&sslValidate=false';
+    this.url = `mongodb://%s${this.host}:${this.port}/integration_tests?ssl=true&sslValidate=false`;
     this.topology = function(topologyHost, topologyPort, serverOptions) {
-      topologyHost = topologyHost || host;
-      topologyPort = topologyPort || port;
+      topologyHost = topologyHost || this.host;
+      topologyPort = topologyPort || this.port;
       serverOptions = Object.assign({}, serverOptions);
       serverOptions.poolSize = 1;
       serverOptions.ssl = true;
@@ -233,13 +231,13 @@ class SslEnvironment extends EnvironmentBase {
  *
  */
 class AuthEnvironment extends EnvironmentBase {
-  constructor(host, port) {
-    super();
+  constructor(parsedURI) {
+    super(parsedURI);
 
-    this.url = `mongodb://%s${host}:${port}/integration_tests`;
+    this.url = `mongodb://%s${this.host}:${this.port}/integration_tests`;
     this.topology = function(topologyHost, topologyPort, serverOptions) {
-      topologyHost = topologyHost || host;
-      topologyPort = topologyPort || port;
+      topologyHost = topologyHost || this.host;
+      topologyPort = topologyPort || this.port;
       serverOptions = Object.assign({}, serverOptions);
       serverOptions.poolSize = 1;
       return new core.Server(topologyHost, topologyPort, serverOptions);

@@ -14,9 +14,6 @@ let files = [];
 
 function addFilter(filter) {
   switch (typeof filter) {
-    case 'function':
-      filters.push({ filter: filter });
-      break;
     case 'object':
       if (!filter.filter || typeof filter.filter !== 'function') {
         throw new Error('Object filters must have a function named filter');
@@ -24,16 +21,16 @@ function addFilter(filter) {
       filters.push(filter);
       break;
     default:
-      throw new Error('Type of filter must either be a function or an object');
+      throw new Error('Type of filter must be an object');
   }
 }
 
-function environmentSetup(environmentCallback) {
+function environmentSetup(environmentCallback, done) {
   const mongodb_uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
   mongoClient = new MongoClient(mongodb_uri);
 
   mongoClient.connect((err, client) => {
-    if (err) throw new Error(err);
+    if (err) environmentCallback(err);
 
     createFilters(environmentParser);
 
@@ -43,22 +40,11 @@ function environmentSetup(environmentCallback) {
 
       let host, port;
       parseConnectionString(mongodb_uri, (err, parsedURI) => {
-        if (err) throw new Error(err);
-        port = parsedURI.hosts[0].port;
-        host = parsedURI.hosts[0].host;
-
-        const environment = new Environment(host, port, version);
-
-        try {
-          const mongoPackage = {
-            path: path.resolve(process.cwd(), '..'),
-            package: 'mongodb'
-          };
-          environment.mongo = require(mongoPackage.path);
-        } catch (err) {
-          throw new Error('The test runner must be a dependency of mongodb or mongodb-core');
-        }
-        environmentCallback(environment, client);
+        if (err) environmentCallback(err);
+        const environment = new Environment(parsedURI, version);
+        environment.mongo = require('../../index');
+        environmentCallback(err, environment);
+        client.close(done);
       });
     }
   });
@@ -70,7 +56,7 @@ function createFilters(callback) {
 
   let topology, version;
 
-  filterFiles.filter(x => x.indexOf('js') !== -1).forEach(x => {
+  filterFiles.filter(x => path.parse(x).ext === '.js').forEach(x => {
     const FilterModule = require(path.join(__dirname, 'filters', x));
     const filter = new FilterModule();
 
@@ -95,10 +81,10 @@ function createFilters(callback) {
 }
 
 before(function(done) {
-  environmentSetup((environment, client) => {
+  environmentSetup((err, environment) => {
+    if (err) done(err);
     this.configuration = new TestConfiguration(environment);
-    client.close(done);
-  });
+  }, done);
 });
 
 beforeEach(function(done) {

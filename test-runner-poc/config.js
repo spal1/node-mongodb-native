@@ -4,26 +4,18 @@ const url = require('url');
 const qs = require('querystring');
 const core = require('../lib/core');
 
-class ConfigurationBase {
-  constructor(options) {
-    this.options = options || {};
-    this.host = options.host || 'localhost';
-    this.port = options.port || 27017;
-    this.db = options.db || 'integration_tests';
-    this.mongo = options.mongo;
-    this.setName = options.setName || 'rs';
+class NativeConfiguration {
+  constructor(environment) {
+    this.options = environment || {};
+    this.host = environment.host || 'localhost';
+    this.port = environment.port || 27017;
+    this.db = environment.db || 'integration_tests';
+    this.mongo = environment.mongo;
+    this.setName = environment.setName || 'rs';
     this.require = this.mongo;
     this.writeConcern = function() {
       return { w: 1 };
     };
-  }
-}
-
-class NativeConfiguration extends ConfigurationBase {
-  constructor(environment) {
-    super(environment);
-
-    this.type = 'native';
     this.topology = environment.topology || this.defaultTopology;
     this.environment = environment;
 
@@ -50,11 +42,6 @@ class NativeConfiguration extends ConfigurationBase {
     dbOptions = dbOptions || {};
     serverOptions = Object.assign({}, { haInterval: 100 }, serverOptions);
     if (this.usingUnifiedTopology()) serverOptions.useUnifiedTopology = true;
-
-    // Override implementation
-    if (this.options.newDbInstance) {
-      return this.options.newDbInstance(dbOptions, serverOptions);
-    }
 
     // Set up the options
     const keys = Object.keys(this.options);
@@ -87,34 +74,6 @@ class NativeConfiguration extends ConfigurationBase {
   newTopology(host, port, options) {
     options = options || {};
     return this.topology(host, port, options);
-  }
-
-  newConnection(host, port, options, callback) {
-    if (typeof options === 'function') {
-      callback = options;
-      options = {};
-    }
-
-    var server = this.topology(host, port, options);
-    var errorHandler = function(err) {
-      callback(err);
-    };
-
-    // Set up connect
-    server.once('connect', function() {
-      server.removeListener('error', errorHandler);
-      callback(null, server);
-    });
-
-    server.once('error', errorHandler);
-
-    // Connect
-    try {
-      server.connect();
-    } catch (err) {
-      server.removeListener('error', errorHandler);
-      callback(err);
-    }
   }
 
   url(username, password) {
