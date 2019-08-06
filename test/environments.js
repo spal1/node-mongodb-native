@@ -49,7 +49,7 @@ function usingUnifiedTopology() {
  * @param {*} discoverResult
  */
 class ReplicaSetEnvironment extends EnvironmentBase {
-  constructor(version) {
+  constructor(discoverResult) {
     super();
 
     this.host = 'localhost';
@@ -82,6 +82,7 @@ class ReplicaSetEnvironment extends EnvironmentBase {
     ];
 
     // Do we have 3.2+
+    const version = discoverResult.version.join('.');
     if (semver.satisfies(version, '>=3.2.0')) {
       this.nodes = this.nodes.map(function(x) {
         x.options.enableMajorityReadConcern = null;
@@ -144,7 +145,7 @@ const genConfigNode = (port, options) => {
  *
  */
 class ShardedEnvironment extends EnvironmentBase {
-  constructor(version) {
+  constructor(discoverResult) {
     super();
 
     this.host = 'localhost';
@@ -168,6 +169,8 @@ class ShardedEnvironment extends EnvironmentBase {
       return new core.Mongos([{ host, port }], options);
     };
 
+    const version =
+      discoverResult && discoverResult.version ? discoverResult.version.join('.') : null;
     this.server37631WorkaroundNeeded = semver.satisfies(version, '3.6.x');
     this.manager = new ShardingManager({
       mongod: 'mongod',

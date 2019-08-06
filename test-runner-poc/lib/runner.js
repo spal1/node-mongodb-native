@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const path = require("path");
 const fs = require("fs");
@@ -10,6 +10,7 @@ const mock = require('mongodb-mock-server');
 
 let mongoClient;
 let filters = [];
+let files = [];
 
 function addFilter(filter) {
   switch (typeof filter) {

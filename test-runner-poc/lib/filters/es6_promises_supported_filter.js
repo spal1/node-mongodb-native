@@ -1,11 +1,14 @@
 'use strict';
 
 class ES6PromisesSupportedFilter {
-  filter(test) {
-    if (!(test.metadata && test.metadata.requires && test.metadata.requires.promises)) {
-      return true;
-    }
+  beforeStart(object, callback) {
+    callback();
+  }
 
+  filter(test) {
+    if (!test.metadata) return true;
+    if (!test.metadata.requires) return true;
+    if (!test.metadata.requires.promises) return true;
     let check = false;
 
     try {

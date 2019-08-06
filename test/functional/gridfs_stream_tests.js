@@ -409,7 +409,8 @@ describe('GridFS Stream', function() {
             // care that we got between 1 and 3, and got the right result
             test.ok(gotData >= 1 && gotData <= 3);
             test.equal(str, 'pache');
-            client.close(done);
+            client.close();
+            done();
           });
         });
 
@@ -1188,7 +1189,17 @@ describe('GridFS Stream', function() {
 
                 download.on('end', function() {
                   var result = testSpec.assert.result;
-                  expect(result).to.exist;
+                  if (!result) {
+                    test.ok(false);
+
+                    // We need to abort in order to close the underlying cursor,
+                    // and by extension the implicit session used for the cursor.
+                    // This is only necessary if the cursor is not exhausted
+                    download.abort();
+                    client.close();
+                    done();
+                  }
+
                   test.equal(res.toString('hex'), result.$hex);
 
                   // We need to abort in order to close the underlying cursor,
@@ -1430,8 +1441,8 @@ describe('GridFS Stream', function() {
             // care that we got between 1 and 3, and got the right result
             test.ok(gotData >= 1 && gotData <= 3);
             test.equal(str, 'pache');
-            client.close(done);
-            // done();
+            client.close();
+            done();
           });
         });
 

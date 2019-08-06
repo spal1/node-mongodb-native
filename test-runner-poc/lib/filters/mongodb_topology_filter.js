@@ -19,7 +19,7 @@ class MongoDBTopologyFilter {
         callback(err);
         return;
       }
-
+      console.log("client.topology.s.coreTopology.ismaster.hosts ",client.topology.s.coreTopology.ismaster)
       let topologyType = mongoClient.topology.type;
       switch (topologyType) {
         case 'server':
@@ -36,15 +36,15 @@ class MongoDBTopologyFilter {
       client.close(callback);
     });
   }
-  
-  constructor() {
+
+  constructor(options) {
     this.runtimeTopology = 'single';
   }
 
   filter(test) {
-    if (!(test.metadata && test.metadata.requires && test.metadata.requires.topology)) {
-      return true;
-    }
+    if (!test.metadata) return true;
+    if (!test.metadata.requires) return true;
+    if (!test.metadata.requires.topology) return true;
 
     // If we have a single topology convert to single item array
     let topologies = null;
@@ -61,6 +61,7 @@ class MongoDBTopologyFilter {
 
     // Check if we have an allowed topology for this test
     for (let i = 0; i < topologies.length; i++) {
+      // console.log('topologies[i] ', topologies[i])
       if (topologies[i] === this.runtimeTopology) return true;
     }
 
